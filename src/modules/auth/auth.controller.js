@@ -1,0 +1,9 @@
+import APIResponse from "../../common/utils/api-response.js";
+import * as authService from "./auth.service.js";
+
+const register = async (req, res) => {
+  const user = await authService.registerService(req.body);
+  APIResponse.created(res, "Registration success", user);
+};
+
+export { register };

@@ -15,6 +15,10 @@ class APIError extends Error {
   static unauthorized(message = "Unauthorized") {
     return new APIError(401, message);
   }
+
+  static conflict(message = "Conflict - User already exist") {
+    return new APIError(409, message);
+  }
 }
 
 export default APIError;
