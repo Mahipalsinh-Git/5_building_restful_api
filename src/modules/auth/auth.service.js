@@ -40,7 +40,7 @@ const registerService = async ({ name, email, password, role }) => {
   return userObj;
 };
 
-const login = async ({ email, password }) => {
+const loginService = async ({ email, password }) => {
   // fetch User from DB
   const user = await User.findOne({ email }).select("+password");
   if (!user) {
@@ -48,6 +48,11 @@ const login = async ({ email, password }) => {
   }
 
   // Verify password is correct
+  const isValidPassword = await user.comparePassword(password);
+
+  if (!isValidPassword) {
+    throw APIError.unauthorized("Invalid email or password");
+  }
 
   //
   if (!user.isVerified) {
@@ -135,7 +140,44 @@ const forgotPassword = async (email) => {
   //TODO: sent mail to user with raw token
 };
 
-export { registerService, login, refresh };
+const getMe = async (userId) => {
+  const user = await User.findById(userId);
+
+  if (!user) throw APIError.notFound("User not found!");
+
+  return user;
+};
+
+const verifyEmail = async (token) => {
+  const hashedToken = hashToken(token);
+  const user = await User.findOne({ verificationToken: hashedToken }).select(
+    "+verificationToken",
+  );
+
+  // throw error if user not found
+  if (!user) {
+    throw APIError.notFound("User not found");
+  }
+
+  user.isVerified = true;
+  user.verificationToken = undefined;
+
+  await user.save();
+  return user;
+};
+
+// TODO: Reset password
+const resetPassword = async (token) => {};
+
+export {
+  registerService,
+  loginService,
+  refresh,
+  logout,
+  forgotPassword,
+  resetPassword,
+  verifyEmail,
+};
 
 //TODO: After register user, create service for verify token - for that sent email with hash token and also save this token in DB
 // and whenever compare both this token then update "isVerify" status in DB
