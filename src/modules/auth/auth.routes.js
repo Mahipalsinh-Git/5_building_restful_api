@@ -11,6 +11,6 @@ const router = Router();
 router.post("/register", validate(RegisterDTO), controller.register);
 router.post("/login", validate(LoginDTO), controller.login);
 router.get("/me", authenticate, controller.login);
-router.get("/me", authenticate, controller.logout);
+router.get("/logout", authenticate, controller.logout);
 
 export default router;

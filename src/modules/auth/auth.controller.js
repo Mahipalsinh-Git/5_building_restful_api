@@ -47,7 +47,7 @@ const logout = async (req, res) => {
   res.clearCookie("refreshToken");
   res.clearCookie("accessToken");
 
-  APIResponse.ok("Logout success");
+  APIResponse.ok(res, "Logout success");
 };
 
 export { register, login, logout, getMe };
