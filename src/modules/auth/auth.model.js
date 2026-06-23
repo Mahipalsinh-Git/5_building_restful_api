@@ -54,11 +54,9 @@ const userSchema = new mongoose.Schema(
 );
 
 // mongoose middleware
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-
+userSchema.pre("save", async function () {
+  if (!this.isModified("password"));
   this.password = await bcrypt.hash(this.password, 12); // salt number between 8 to 12
-  next();
 });
 
 // compare password - bcrypt
