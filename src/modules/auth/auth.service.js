@@ -97,11 +97,11 @@ const refresh = async ({ refreshToken }) => {
     id: user._id,
   });
 
-  const refreshToken = generateRefreshToken({
+  const getRefreshToken = generateRefreshToken({
     id: user._id,
   });
 
-  user.refreshToken = hashToken(refreshToken);
+  user.refreshToken = hashToken(getRefreshToken);
   await user.save({ validateBeforeSave: false }); // don't check before save because no need to verify
 
   const userObj = user.toObject();
